@@ -18,6 +18,8 @@ defmodule Bamboo.SendGridHelper do
   @bypass_list_management :bypass_list_management
   @google_analytics_enabled :google_analytics_enabled
   @google_analytics_utm_params :google_analytics_utm_params
+  @click_tracking_enabled :click_tracking_enabled
+  @click_tracking_enabled_text :click_tracking_enabled_text
   @additional_personalizations :additional_personalizations
   @allowed_google_analytics_utm_params ~w(utm_source utm_medium utm_campaign utm_term utm_content)a
   @send_at_field :sendgrid_send_at
@@ -191,6 +193,17 @@ defmodule Bamboo.SendGridHelper do
 
   def with_google_analytics(_email, _enabled, _utm_params) do
     raise "expected with_google_analytics enabled parameter to be a boolean"
+  end
+
+  def with_click_tracking(email, enabled, enabled_text)
+      when is_boolean(enabled) and is_boolean(enabled_text) do
+    email
+    |> Email.put_private(@click_tracking_enabled, enabled)
+    |> Email.put_private(@click_tracking_enabled_text, enabled_text)
+  end
+
+  def with_click_tracking(_email, _enabled, _enabled_text) do
+    raise "expected with_click_tracking enabled/enabled_text parameters to be booleans"
   end
 
   @doc """
